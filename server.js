@@ -1,7 +1,7 @@
 // server.js
 const express = require('express');
 const connectDB = require('./src/config/database');
-const cors = require('cors');
+app.use(cors({ origin: '*' }));
 const path = require('path'); // Adicione esta linha
 require('dotenv').config();
 
