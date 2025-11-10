@@ -16,13 +16,14 @@ module.exports = {
   async create(req, res) {
     try {
       const { title, date, description } = req.body;
-      const { filename } = req.file; // Pega o nome do arquivo do multer
+      const filename = req.file?.filename || null;
+
 
       const event = await Event.create({
         title,
         date,
         description,
-        photo: filename,
+        photo: filename, // Usamos a variável 'filename' que pode ser o nome do arquivo ou null
         user: req.userId, // ID vem do middleware
       });
 
