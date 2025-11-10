@@ -1,28 +1,30 @@
-// server.js - VERSÃO CORRETA E COMPLETA
+// server.js - VERSÃO FINAL CORRIGIDA
 
 // 1. IMPORTAÇÕES
 const express = require('express');
 const connectDB = require('./src/config/database');
-const cors = require('cors'); // <-- Importação que estava faltando
+const cors = require('cors');
 const path = require('path');
 require('dotenv').config();
 
 // 2. CRIAÇÃO DA APLICAÇÃO EXPRESS
 const app = express();
 
-// 3. CONEXÃO COM O BANCO DE DADOS
-connectDB();
+// 3. CONFIGURAÇÃO DOS MIDDLEWARES PRINCIPAIS
 
-// 4. CONFIGURAÇÃO DOS MIDDLEWARES
-// Permite que requisições de qualquer origem acessem a API
 app.use(cors({ origin: '*' }));
+
 // Permite que o Express entenda requisições com corpo em JSON
 app.use(express.json());
 
+// 4. CONEXÃO COM O BANCO DE DADOS
+connectDB();
+
+// 5. DEFINIÇÃO DAS ROTAS DA APLICAÇÃO
 // Rota para servir os arquivos de imagem da pasta 'uploads'
 app.use('/files', express.static(path.resolve(__dirname, 'uploads')));
 
-// 5. DEFINIÇÃO DAS ROTAS DA APLICAÇÃO
+// Rotas da API
 app.use('/api/auth', require('./src/routes/authRoutes'));
 app.use('/api/events', require('./src/routes/eventRoutes'));
 
