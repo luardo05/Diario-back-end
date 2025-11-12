@@ -2,7 +2,7 @@
 const Event = require('../models/Event');
 
 module.exports = {
-  // Listar todos os eventos do usuário logado
+  // A função 'index' permanece a mesma
   async index(req, res) {
     try {
       const events = await Event.find({ user: req.userId }).sort('-date');
@@ -12,19 +12,22 @@ module.exports = {
     }
   },
 
-  // Criar um novo evento
+  // --- FUNÇÃO 'create' MODIFICADA ---
   async create(req, res) {
     try {
       const { title, date, description } = req.body;
-      const filename = req.file?.filename || null;
-
+      
+      // ALTERAÇÃO: Agora, o multer-storage-cloudinary nos dá a propriedade 'path',
+      // que contém a URL completa da imagem hospedada.
+      // Se nenhum arquivo for enviado, req.file será undefined, e 'photoUrl' será uma string vazia.
+      const photoUrl = req.file ? req.file.path : '';
 
       const event = await Event.create({
         title,
         date,
         description,
-        photo: filename, // Usamos a variável 'filename' que pode ser o nome do arquivo ou null
-        user: req.userId, // ID vem do middleware
+        photo: photoUrl, // Salvamos a URL do Cloudinary (ou a string vazia) no banco de dados
+        user: req.userId,
       });
 
       return res.status(201).json(event);
@@ -32,14 +35,14 @@ module.exports = {
       return res.status(400).send({ error: 'Erro ao criar novo evento: ' + err });
     }
   },
+  // --- FIM DA MODIFICAÇÃO ---
 
-  // Atualizar um evento
+  // A função 'update' permanece a mesma
   async update(req, res) {
     try {
       const { title, date, description } = req.body;
       const event = await Event.findById(req.params.id);
 
-      // Verifica se o evento pertence ao usuário logado
       if (String(event.user) !== req.userId) {
         return res.status(401).send({ error: 'Você não tem permissão para editar este evento.' });
       }
@@ -52,12 +55,11 @@ module.exports = {
     }
   },
 
-  // Deletar um evento
+  // A função 'delete' permanece a mesma
   async delete(req, res) {
     try {
       const event = await Event.findById(req.params.id);
 
-      // Verifica se o evento pertence ao usuário logado
       if (String(event.user) !== req.userId) {
         return res.status(401).send({ error: 'Você não tem permissão para apagar este evento.' });
       }
