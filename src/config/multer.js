@@ -12,6 +12,7 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET
 });
 
+
 // Configura o "motor de armazenamento" do Multer para enviar os arquivos
 // diretamente para a sua conta do Cloudinary.
 const storage = new CloudinaryStorage({

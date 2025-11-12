@@ -55,6 +55,7 @@ module.exports = {
     }
   },
 
+  
   // A função 'delete' permanece a mesma
   async delete(req, res) {
     try {
